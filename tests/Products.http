@@ -1,0 +1,7 @@
+### PATCH REQUEST 
+PATCH http://localhost:4004/odata/v4/store-sales/Products(fc8f8bb1-ecc1-4e6e-87b3-82f453c90d38)
+Content-Type: application/json 
+
+{ 
+    "stock": 24
+} 

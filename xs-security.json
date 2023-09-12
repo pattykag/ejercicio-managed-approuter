@@ -1,0 +1,38 @@
+{
+  "xsappname": "ejercicio1-ventas",
+  "tenant-mode": "dedicated",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.admin",
+      "description": "Admin permissions"
+    },
+    {
+      "name": "$XSAPPNAME.final-user",
+      "description": "Read and Create"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "final-user",
+      "description": "Admin permissions",
+      "scope-references": [
+        "$XSAPPNAME.final-user"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "admin",
+      "description": "Read and Create",
+      "scope-references": [
+        "$XSAPPNAME.admin"
+      ],
+      "attribute-references": []
+    }
+  ],
+  "attributes": [],
+  "oauth2-configuration": {
+    "redirect-uris": [
+      "https://*.applicationstudio.cloud.sap/**"
+    ]
+  }
+}

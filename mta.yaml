@@ -1,0 +1,91 @@
+_schema-version: "3.1"
+ID: ejercicio1-ventas
+description: A simple CAP project.
+version: 1.0.0
+modules:
+  - name: ejercicio1-ventas-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: ejercicio1-ventas-xsuaa
+      - name: ejercicio1-ventas-db
+
+  - name: ejercicio1-ventas-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: ejercicio1-ventas-db
+
+  - name: ejercicio1-ventas-destination-content
+    type: com.sap.application.content
+    requires:
+    - name: ejercicio1-ventas-destination-service
+      parameters:
+        content-target: true
+    - name: ejercicio1-ventas_html_repo_host
+      parameters:
+        service-key:
+          name: ejercicio1-ventas_html_repo_host-key
+    - name: ejercicio1-ventas-xsuaa
+      parameters:
+        service-key:
+          name: ejercicio1-ventas-xsuaa-key
+    parameters:
+      content:
+        instance:
+          destinations:
+          - Name: router8_ejercicio1_ventas_html_repo_host
+            ServiceInstanceName: ejercicio1-ventas-html5-app-host-service
+            ServiceKeyName: ejercicio1-ventas_html_repo_host-key
+            sap.cloud.service: router8
+          - Authentication: OAuth2UserTokenExchange
+            Name: router8_ejercicio1_ventas_xsuaa
+            ServiceKeyName: ejercicio1-ventas-xsuaa-key
+            sap.cloud.service: router8
+          existing_destinations_policy: ignore
+    build-parameters:
+      no-source: true
+resources:
+  - name: ejercicio1-ventas-xsuaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+  - name: ejercicio1-ventas-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+  - name: ejercicio1-ventas-destination-service
+    type: org.cloudfoundry.managed-service
+    parameters:
+      config:
+        HTML5Runtime_enabled: true
+        version: 1.0.0
+      service: destination
+      service-name: ejercicio1-ventas-destination-service
+      service-plan: lite
+  - name: ejercicio1-ventas_html_repo_host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-name: ejercicio1-ventas-html5-app-host-service
+      service-plan: app-host
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+  - builder: custom
+    commands:
+    - npx cds build --production

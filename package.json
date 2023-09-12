@@ -1,0 +1,30 @@
+{
+  "name": "ejercicio1-ventas",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap/cds": "^7",
+    "express": "^4",
+    "@sap/xssec": "^3",
+    "passport": "^0",
+    "@sap/cds-hana": "^2"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^1",
+    "@sap/cds-dk": "^7"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "deploy": "npm i && mbt build && cf deploy mta_archives/ejercicio1-ventas_1.0.0.mtar --retries 1",
+    "undeploy": "cf undeploy ejercicio1-ventas --delete-services --delete-service-keys -f"
+  },
+  "cds": {
+    "requires": {
+      "auth": "xsuaa",
+      "db": "hana"
+    }
+  }
+}

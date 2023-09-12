@@ -1,0 +1,7 @@
+### PATCH REQUEST 
+PATCH http://localhost:4004/odata/v4/store-sales/Clients(946edd75-10c3-49f7-8546-21aa96f149f0)
+Content-Type: application/json 
+
+{ 
+    "country_code": "US"
+} 
